@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+
+    <title>App</title>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="toJson">go</button>
+        <br>
+        <textarea v-model="input" name="example1" cols="50" rows="30">
+
+        </textarea>
+        <h2>↓↓↓↓↓↓output↓↓↓↓↓↓</h2>
+        <button @click="copy">copy to clipboard</button>
+        <pre>{{code}}
+        </pre>
+        <code>
+
+        </code>
+    </div>
+
+    <script>
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    input: `100,100,100,100,100,100,100,100,100,100,100,100,100
+100,100,100,100,100,100,100,100,100,100,100,100,100
+100,100,100,100,100,100,100,100,100,100,100,100,
+100,100,100,100,100,100,100,100,100,100,100,,
+100,100,100,100,100,100,100,100,100,100,,,
+100,100,100,100,100,100,100,100,100,,,,
+100,100,100,100,100,100,100,100,100,100,,,
+100,,,,,,,100,100,100,,,
+100,,,,,,,,100,100,100,,
+100,,,,,,,,,100,100,,
+100,,,,,,,,,,100,100,
+100,,,,,,,,,,,100,
+,,,,,,,,,,,,100`,
+                    code: ''
+                
+                }
+            },
+            methods:{
+                toJson: function(){
+                    const rows = this.input.split('\n');
+                    let ret = ''
+                    rows.forEach((row, i_row) => {
+                        ret += '"' +(14 - i_row) + '": ';
+                        ret += '['
+                        items = row.split(',');
+                        items.forEach((item, i_item)=>{
+                            if(i_item!=0){ret+=','}
+                            if(item == ''){item = 0}
+                                ret += '[0, 0, ' + item + ']'
+                        })
+                        ret += '],\n';
+                    });
+                    ret = ret.slice(0, -2); //remove trailing comma
+                    this.code = ret;
+                },
+                copy: function(){
+                    navigator.clipboard.writeText(this.code);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
