@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+
+    <title>App</title>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="toJson">go</button>
+        <br>
+        <textarea v-model="input" name="example1" cols="50" rows="30">
+
+        </textarea>
+        <h2>↓↓↓↓↓↓output↓↓↓↓↓↓</h2>
+        <button @click="copy">copy to clipboard</button>
+        <pre>{{code}}
+        </pre>
+        <code>
+
+        </code>
+    </div>
+
+    <script>
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    input: `1	1	1	1	1	2	2	2	2	1	1	2	2
+1	1	1	1	1	1	2	2	2	2	2	2	2
+1	1	1	1	1	1	2	2	2	2	2	2	2
+1	2	2	1	1	1	1	2	2	2	2	2	2
+2	2	2	2	1	1	1	1	2	2	2	3	3
+2	2	2	2	2	1	1	2	2	3	3	3	3
+2	2	3	3	3	3	1	1	2	2	3	3	3
+2	3	3	3	3	3	3	2	1	2	2	3	3
+2	3	3	3	3	3	3	3	2	1	2	2	3
+2	3	3	3	3	3	3	3	3	2	1	2	2
+2	3	3	3	3	3	3	3	3	3	2	2	2
+3	3	3	3	3	3	3	3	3	3	3	2	3
+3	3	3	3	3	3	3	3	3	3	3	3	2`,
+                    code: ''
+
+                }
+            },
+            methods: {
+                toJson: function () {
+                    let rows = this.input.split('\n');
+                    rows = rows.filter((x) => x != '');
+                    let ret = '';
+                    rows.forEach((row, i_row) => {
+                        if (i_row != 0) {
+                            ret += ','
+                        }
+                        ret += this.convertRowToJson(row);
+                        ret += '\n';
+                    });
+                    this.code = ret;
+                },
+                convertRowToJson: function(row) {
+                    let items = row.split('\t');
+                    let ret = '[';
+                    items.forEach((item, i_item) => {
+                        if(i_item != 0){
+                            ret += ','
+                        }
+                        ret += '['
+                        const handRange = [0, 0, 0, 0];
+                        handRange[item-1] = 100;
+                        ret += handRange + ']';
+
+                    });
+                    ret += ']';
+                    return ret;
+                },
+                copy: function () {
+                    navigator.clipboard.writeText(this.code);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
